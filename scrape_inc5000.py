@@ -2,49 +2,65 @@ import requests
 import time
 import json
 
-BASE_URL = 'http://www.inc.com/rest/inc5000company/%s/full_list'
+class Inc5000_Scraper(object):
 
-def get_data_by_id(biz_id, n_tries):
-	"""
-	INPUT: business ID, number of attempts
-	OUPUT: None or JSON data
+	BASE_URL = 'http://www.inc.com/rest/inc5000company/%s/full_list'
 
-	Given a business ID, retrieve the data. 
-	"""
+	def __init__(self):
+		pass
 
-	# base case for recursive re-try scheme
-	if n_tries == 0: 
-		return None
+	def scrape(self, fname): 
+		"""
+		Run the scraper
+		"""
 
-	# make the request
-	endpoint = BASE_URL % biz_id
-	response = requests.get(endpoint)
+		biz_id = self.get_start_id()
 
-	# request was successful
-	if response: 
-		return response.json()['data']
-	else: # try again
-		print "Couldn't retrieve %s" % biz_id
-		print "Sleeping and trying again"
-		time.sleep(2)
-		return get_data_by_id(biz_id, n_tries-1) # recursion
+		with open(fname, 'w') as out:
 
-def main(): 
+			while biz_id:
 
-	biz_id = 22890 # start
+				next = get_data_by_id(biz_id, 5)
 
-	with open('results.json', 'w') as out:
+				out.write(json.dumps(next))
+				out.write("\n")
 
-		while(True):
+				biz_id = next['next_id'] if next else None
 
-			next = get_data_by_id(biz_id, 5)
 
-			out.write(json.dumps(next))
-			out.write("\n")
+	def get_data_by_id(self, biz_id, n_tries):
+		"""
+		INPUT: business ID, number of attempts
+		OUPUT: None or JSON data
 
-			print "%s. Done with %s" % (next['rank'], next['ifc_company'])
-			biz_id = next['next_id']
+		Given a business ID, retrieve the data. 
+		"""
+
+		# base case for recursive re-try scheme
+		if n_tries == 0: 
+			return None
+
+		# make the request
+		endpoint = self.BASE_URL % biz_id
+		response = requests.get(endpoint)
+
+		# request was successful
+		if response: 
+			return response.json()['data']
+		else: # try again
+			print "Couldn't retrieve %s" % biz_id
+			print "Sleeping and trying again"
+			time.sleep(2)
+			return get_data_by_id(biz_id, n_tries-1) # recursion
+
+
+	def get_start_id(self):
+		"""
+		TODO: automate this
+		"""
+		return 22890 # manual
 
 if __name__ == "__main__":
-	main()
-
+	
+	scraper = Inc5000_Scraper()
+	scraper.scrape('results.json')
