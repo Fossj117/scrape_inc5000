@@ -6,9 +6,6 @@ class Inc5000_Scraper(object):
 
 	BASE_URL = 'http://www.inc.com/rest/inc5000company/%s/full_list'
 
-	def __init__(self):
-		pass
-
 	def scrape(self, fname): 
 		"""
 		Run the scraper
@@ -20,7 +17,8 @@ class Inc5000_Scraper(object):
 
 			while biz_id:
 
-				next = get_data_by_id(biz_id, 5)
+				next = self.get_data_by_id(biz_id, 5)
+				print next['rank']
 
 				out.write(json.dumps(next))
 				out.write("\n")
@@ -51,7 +49,7 @@ class Inc5000_Scraper(object):
 			print "Couldn't retrieve %s" % biz_id
 			print "Sleeping and trying again"
 			time.sleep(2)
-			return get_data_by_id(biz_id, n_tries-1) # recursion
+			return self.get_data_by_id(biz_id, n_tries-1) # recursion
 
 
 	def get_start_id(self):
@@ -63,4 +61,4 @@ class Inc5000_Scraper(object):
 if __name__ == "__main__":
 	
 	scraper = Inc5000_Scraper()
-	scraper.scrape('results.json')
+	scraper.scrape(fname='results2.json')
