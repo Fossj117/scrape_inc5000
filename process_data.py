@@ -41,5 +41,5 @@ if __name__ == "__main__":
 	with open(FNAME, 'rb') as f: 
 		raw = [json.loads(line) for line in f]
 
-	df = pd.DataFrame(raw[:-1])
+	df = pd.DataFrame(raw)
 	df = expand_years_field(df)
