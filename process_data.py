@@ -12,12 +12,12 @@ def ranking_delta(year_data):
 
 	yrs_ranked = len(year_data)
 
-	if yrs_ranked = 1:
+	if yrs_ranked in {0, 1}:
 		return None	
 	else: 
-		current_rank = yrs_ranked[0]['ify_rank']
-		previous_rank = yrs_ranked[1]['ify_rank'] if yrs_ranked[1]['ify_year']=='2013' else None
-		return current_rank - previous_rank if previous_rank else None
+		current_rank = year_data[0]['ify_rank']
+		previous_rank = year_data[1]['ify_rank'] if year_data[1]['ify_year']=='2013' else None
+		return int(current_rank) - int(previous_rank) if previous_rank else None
 
 def expand_years_field(df, years='years'):
 	"""
