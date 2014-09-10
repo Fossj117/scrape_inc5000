@@ -61,4 +61,4 @@ class Inc5000_Scraper(object):
 if __name__ == "__main__":
 	
 	scraper = Inc5000_Scraper()
-	scraper.scrape(fname='results2.json')
+	scraper.scrape(fname='results.json')

@@ -24,7 +24,11 @@ def expand_years_field(df, years='years'):
 	INPUT: data frame, name of the 'years' field
 	OUTPUT: data frame (w/extra columns)
 
-	Expands the nested 'years' data in the JSON
+	Expands the nested 'years' data in the JSON and computes a few basic things: 
+
+	- n_years_ranked : number of years company was ranked in INC 5000
+	- which_years_ranked : space-delimited text field including the years ranked
+	- rank_delta : change in a company's rank from previous ranking (if applicable), or NA
 	"""
 
 	df = df.copy()
@@ -42,4 +46,6 @@ if __name__ == "__main__":
 		raw = [json.loads(line) for line in f]
 
 	df = pd.DataFrame(raw)
+
+	# expand the nested years field
 	df = expand_years_field(df)
